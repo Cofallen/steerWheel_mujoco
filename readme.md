@@ -1,5 +1,7 @@
 ## 舵轮简单仿真
 
+![image](./robot/screenshot.png)
+
 > 后续会把麦轮和全向也加入。
 
 ### 文件
