@@ -37,14 +37,14 @@
     </worldbody>
 
     <actuator>
-        <position name="steer0" joint="steer0" kp="2" kv="0.1" ctrlrange="-3.14 3.14"/>
-        <position name="steer1" joint="steer1" kp="2" kv="0.1" ctrlrange="-3.14 3.14"/>
-        <position name="steer2" joint="steer2" kp="2" kv="0.1" ctrlrange="-3.14 3.14"/>
-        <position name="steer3" joint="steer3" kp="2" kv="0.1" ctrlrange="-3.14 3.14"/>
-        <velocity name="wheel0" joint="wheel0" kv="1" ctrlrange="-5 5"/>
-        <velocity name="wheel1" joint="wheel1" kv="1" ctrlrange="-5 5"/>
-        <velocity name="wheel2" joint="wheel2" kv="1" ctrlrange="-5 5"/>
-        <velocity name="wheel3" joint="wheel3" kv="1" ctrlrange="-5 5"/>
+        <position name="steer0" joint="steer0" kp="2" kv="0.1" ctrlrange="-6.28 6.28"/>
+        <position name="steer1" joint="steer1" kp="2" kv="0.1" ctrlrange="-6.28 6.28"/>
+        <position name="steer2" joint="steer2" kp="2" kv="0.1" ctrlrange="-6.28 6.28"/>
+        <position name="steer3" joint="steer3" kp="2" kv="0.1" ctrlrange="-6.28 6.28"/>
+        <velocity name="wheel0" joint="wheel0" kv="1" ctrlrange="-20 20"/>
+        <velocity name="wheel1" joint="wheel1" kv="1" ctrlrange="-20 20"/>
+        <velocity name="wheel2" joint="wheel2" kv="1" ctrlrange="-20 20"/>
+        <velocity name="wheel3" joint="wheel3" kv="1" ctrlrange="-20 20"/>
     </actuator>
     
 </mujoco>
