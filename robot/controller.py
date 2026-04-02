@@ -29,7 +29,7 @@ imu_chassis = YawTracker()
 imu_yaw = YawTracker()
 
 yaw_target = 0
-yaw_pid = PID_control(1, 0, 1, yaw_target)
+yaw_pid = PID_control(10, 0.001, 1, yaw_target)
 
 # 机器人参数（轮距、轴距、轮半径等）
 R = 0.4  # 轴距
@@ -56,6 +56,7 @@ def back_kinematics(steer_angles, wheel_speeds):
     pass
 
 def on_press(key):
+    global yaw_target
     if key == keyboard.Key.up:
         target[1] = 5.0
     elif key == keyboard.Key.down:
@@ -64,14 +65,14 @@ def on_press(key):
         target[0] = -5.0
     elif key == keyboard.Key.right:
         target[0] = 5.0
-    elif key == keyboard.Key.shift_l:
-        target[2] = -10.0
-    elif key == keyboard.Key.shift_r:
-        target[2] = 10.0
     elif key == keyboard.Key.alt_l:
-        target_yaw -= 0.1
+        target[2] = -10.0
     elif key == keyboard.Key.alt_r:
-        target_yaw += 0.1
+        target[2] = 10.0
+    elif key == keyboard.Key.shift_l:
+        yaw_target -= 0.5
+    elif key == keyboard.Key.shift_r:
+        yaw_target += 0.5
     # print(1)
     
 def on_release(key):
@@ -108,7 +109,7 @@ with mujoco.viewer.launch_passive(m, d) as viewer:
         yaw_chassis = imu_chassis.get_euler(quat_chassis)
         # print(yaw_chassis)
         
-        err_angle = yaw_gimbal - yaw_chassis
+        err_angle = yaw_gimbal - yaw_chassis + 0.2
         vx = target[0] * math.cos(err_angle) + target[1] * math.sin(err_angle)
         vy = -target[0] * math.sin(err_angle) + target[1] * math.cos(err_angle)
         if vy == -0.0:
