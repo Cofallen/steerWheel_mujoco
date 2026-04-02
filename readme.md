@@ -2,7 +2,7 @@
 
 ![image](./robot/screenshot.png)
 
-> 后续会把麦轮和全向也加入。
+> ~~后续会把麦轮和全向也加入。~~
 
 ### 文件
 ```bash
@@ -13,6 +13,10 @@
 -- steerwheel       # 舵轮底盘
     -- controller.py  # 控制器
     -- scence.xml     # 仿真文件
+-- mecanum          # 麦轮
+    -- mecanum.xml
+-- omnidirection    # 全向
+    -- omnidirection.xml
 ```
 
 ### 问题

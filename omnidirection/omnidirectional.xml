@@ -1,0 +1,83 @@
+<mujoco>
+    <compiler angle="radian" autolimits="true"/>
+    <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" density="1.225" viscosity="1.8e-5"/>
+    <visual>
+        <global realtime="1"/>
+        <quality shadowsize="16384" numslices="28" offsamples="4"/>
+        <headlight diffuse="3 3 3" specular=".5 .5 .5" active="1"/>
+        <rgba fog="0 1 0 1" haze="1 1 1 1"/>
+    </visual>
+    <asset>
+        <texture name="skybox" type="skybox" builtin="gradient" rgb1=".1 .1 .1" rgb2=".9 .9 .9" width="512" height="512"/>
+        <texture name="plane" type="2d" builtin="checker" rgb1=".1 .1 .1" rgb2=".9 .9 .9" width="512" height="512"/>
+        <material name="plane" texture="plane" reflectance="0.3"/>
+    </asset>
+
+    <worldbody>
+        <geom name="floor" type="plane" material="plane" size="0 0 0.25" pos="0 0 0"/>
+
+        <body name="base_body" pos="0 0 1">
+            <freejoint/>
+            <geom type="cylinder" size="0.5 0.01" rgba=".6 .6 .6 .5"/>
+            
+            <replicate count="4" euler="0 0 1.57">
+            <body name="om_m" pos="0.6 0 0" quat="0.7071 0 0.7071 0">
+                <joint name="a_m" type="hinge" axis="0 0 1" frictionloss=".002"/>
+                <geom type="cylinder" size="0.05 0.1" rgba=".1 .1 .1 1"/>
+                <geom type="cylinder" size="0.15 0.045" rgba=".1 .1 .5 .5"/>
+                
+                <body name="mini_wheel1" pos="0 0 0.015" euler="0 0 0">
+                    <replicate count="10" euler="0 0 0.628">
+                        <body euler="1.57 0 0">
+                            <joint type="hinge" pos="0.15 0.0225 0" axis="0 0 1" frictionloss="0"/>
+                            <geom type="capsule" size="0.02 0.02" pos="0.15 0.0225 0"/>
+                        </body>
+                    </replicate>
+                </body>
+                <body name="mini_wheel2" pos="0 0 -0.055" euler="1.57 0 0">
+                    <replicate count="10" euler="0 0.628 0">
+                        <body euler="0 0.22248 0">
+                            <joint type="hinge" pos="0.15 0.0225 0" axis="0 0 1" frictionloss="0.0002"/>
+                        <geom type="capsule" size="0.02 0.02" pos="0.15 0.0225 0"/>
+                        </body>
+                    </replicate>
+                    
+                </body>
+
+            </body>
+            </replicate>
+            
+        </body>        
+    </worldbody>
+
+    <tendon>
+        <fixed name="forward">
+            <joint joint="a_m0" coef="1"/>
+            <joint joint="a_m1" coef="0"/>
+            <joint joint="a_m2" coef="-1"/>
+            <joint joint="a_m3" coef="0"/>
+        </fixed>
+        <fixed name="transverse">
+            <joint joint="a_m0" coef="0"/>
+            <joint joint="a_m1" coef="1"/>
+            <joint joint="a_m2" coef="0"/>
+            <joint joint="a_m3" coef="-1"/>
+        </fixed>
+        <fixed name="rotate">
+            <joint joint="a_m0" coef="1"/>
+            <joint joint="a_m1" coef="1"/>
+            <joint joint="a_m2" coef="1"/>
+            <joint joint="a_m3" coef="1"/>
+        </fixed>
+    </tendon>
+    
+    <actuator>
+        <velocity joint="a_m0" kv="30" ctrlrange="-15 15"/>
+        <velocity joint="a_m1" kv="30" ctrlrange="-15 15"/>
+        <velocity joint="a_m2" kv="30" ctrlrange="-15 15"/>
+        <velocity joint="a_m3" kv="30" ctrlrange="-15 15"/>
+        <velocity tendon="forward" name="forward" kv="30" ctrlrange="-30 30"/>
+        <velocity tendon="transverse" name="transverse" kv="30" ctrlrange="-30 30"/>
+        <velocity tendon="rotate" name="rotate" kv="30" ctrlrange="-30 30"/>
+    </actuator>
+</mujoco>
