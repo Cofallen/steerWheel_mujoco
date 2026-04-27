@@ -4,6 +4,8 @@ import threading
 from mpc import SimpleMPC
 import numpy as np
 from mpc import MPC
+from myMPC import MyLQR 
+from myMPC import MyMPC 
 
 class Controller:
     def __init__(self, dt=0.01):
@@ -15,9 +17,11 @@ class Controller:
 
         self.target = [0, 0, 0]  # vx vy vw
 
-        self.mpc = MPC(dt)
+        self.mpc = MyMPC(dt)
+        self.lqr = MyLQR(dt)
+        
         self.state = np.zeros(3)   # [X, Y, theta]
-        self.ref = np.array([1.0, 5.0, -10.0])  # 目标点
+        self.ref = np.array([1.0, 1.0, 6.28])  # 目标点
         # self._start_keyboard()
         self.theta = [0.0, 0.0, 0.0]  
 
@@ -106,7 +110,8 @@ class Controller:
         self.update_state(d)
 
         u = self.mpc.solve(self.state, self.ref)
-
+        # u = self.lqr.solve(self.state, self.ref)
+        
         vx, vy, w = u
 
         self.forward_kinematics(vx, vy, w)
