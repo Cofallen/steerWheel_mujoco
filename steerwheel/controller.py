@@ -11,7 +11,10 @@ class Controller:
     def __init__(self, dt=0.01):
         self.R = 0.4 
         self.r = 0.05
-
+        
+        self.time = 0.0
+        self.dt = dt
+        
         self.steer_output = [0.0, 0.0, 0.0, 0.0]
         self.wheel_output = [0.0, 0.0, 0.0, 0.0]
 
@@ -19,7 +22,7 @@ class Controller:
 
         self.mpc = MyMPC(dt)
         self.lqr = MyLQR(dt)
-        
+        # self.mpc = MPC(dt)
         self.state = np.zeros(3)   # [X, Y, theta]
         self.ref = np.array([1.0, 1.0, 6.28])  # 目标点
         # self._start_keyboard()
@@ -106,14 +109,35 @@ class Controller:
 
         return np.array([roll, pitch, yaw])
     
+    def generate_trajectory(self, t):
+        R = 1.0
+        w = 0.5
+        x = R * np.cos(w * t)
+        y = R * np.sin(w * t)
+        # theta = 0
+        theta = w * t
+        
+        return np.array([x, y, theta])
+    
+    def build_ref_traj(self, t0):
+        traj = []
+        for k in range(self.mpc.N):
+            t = t0 + k * self.mpc.dt
+            traj.append(self.generate_trajectory(t))
+        return np.array(traj).reshape(-1)
+    
     def update(self, d):
         self.update_state(d)
 
-        u = self.mpc.solve(self.state, self.ref)
+        # u = self.mpc.solve(self.state, self.ref)
         # u = self.lqr.solve(self.state, self.ref)
+        refj = self.build_ref_traj(self.time)
+        u = self.mpc.solve(self.state, refj)
         
         vx, vy, w = u
 
         self.forward_kinematics(vx, vy, w)
 
+        self.time += self.dt
+        
         return self.steer_output, self.wheel_output

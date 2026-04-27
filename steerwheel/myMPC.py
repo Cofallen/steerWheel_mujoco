@@ -39,11 +39,11 @@ class MyMPC:
     def __init__(self, dt, N=10):
         self.dt = dt
         self.N = N
-        self.Q = np.diag([30.0, 30.0, 800.0])     # 状态误差
-        self.R = np.diag([0.1, 0.1, 1.0])     # 控制输入
+        self.Q = np.diag([100.0, 100.0, 100.0])     # 状态误差
+        self.R = np.diag([0.1, 0.1, 0.1])     # 控制输入
          # ===== 控制约束 =====
-        self.u_min = np.array([-1.0, -1.0, -10.0])
-        self.u_max = np.array([ 1.0,  1.0,  10.0])
+        self.u_min = np.array([-100.0, -100.0, -100.0])
+        self.u_max = np.array([ 100.0,  100.0,  100.0])
         
     def linearize(self, theta):
         A = np.eye(3) + np.array([
@@ -88,7 +88,8 @@ class MyMPC:
         
         Q_bar = np.kron(np.eye(self.N), self.Q)
         R_bar = np.kron(np.eye(self.N), self.R)
-        x_ref_bar = np.tile(x_ref, self.N)
+        # x_ref_bar = np.tile(x_ref, self.N)
+        x_ref_bar = x_ref
         
         H = Gamma.T @ Q_bar @ Gamma + R_bar
         f = Gamma.T @ Q_bar @ (Phi @ x - x_ref_bar)

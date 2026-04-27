@@ -6,7 +6,7 @@ class SimpleMPC:
         self.dt = dt
 
         # 权重（可以调）
-        self.Q = np.diag([10.0, 10.0, 5.0])   # 状态误差
+        self.Q = np.diag([100.0, 100.0, 0.0])   # 状态误差
         self.R = np.diag([0.1, 0.1, 0.1])     # 控制输入
 
     def linearize(self, theta):
@@ -108,7 +108,8 @@ class MPC:
         Q_bar = np.kron(np.eye(self.N), self.Q)
         R_bar = np.kron(np.eye(self.N), self.R)
 
-        x_ref_bar = np.tile(x_ref, self.N)
+        x_ref_bar = x_ref
+        # x_ref_bar = np.tile(x_ref, self.N)
 
         # cost: ||Phi x + Gamma u - x_ref||^2 + u^T R u
         H = Gamma.T @ Q_bar @ Gamma + R_bar
